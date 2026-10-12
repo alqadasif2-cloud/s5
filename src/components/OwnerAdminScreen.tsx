@@ -62,8 +62,8 @@ export const OwnerAdminScreen: React.FC<OwnerAdminScreenProps> = ({ currentUser 
 
   // App Update Cloud Config State
   const [appUpdateConfig, setAppUpdateConfig] = useState<AppUpdateConfig | null>(null);
-  const [editVersionName, setEditVersionName] = useState('1.2.0');
-  const [editVersionCode, setEditVersionCode] = useState('10');
+  const [editVersionName, setEditVersionName] = useState('1.3.0');
+  const [editVersionCode, setEditVersionCode] = useState('11');
   const [editDownloadUrl, setEditDownloadUrl] = useState('https://github.com/alsonadi44/SamiTradingTracker/releases');
   const [editDescription, setEditDescription] = useState('الإصدار الأحدث متوفر الآن مع تحسينات في الأداء وتطوير الواجهة.');
   const [editIsMandatory, setEditIsMandatory] = useState(false);

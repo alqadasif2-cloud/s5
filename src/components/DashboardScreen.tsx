@@ -42,7 +42,9 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
   const avatarInputRef = useRef<HTMLInputElement>(null);
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
 
-  const isGuest = Boolean(currentUser?.isGuest || currentUser?.role === 'guest');
+  const isGuest = Boolean(
+    currentUser?.isGuest || currentUser?.role === 'guest' || (currentUser?.id && currentUser.id > 9000000)
+  );
 
   const progressPercent = calculateProgress(
     challenge.currentBalanceCents,
@@ -85,8 +87,19 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
     >
       <div
         className={`space-y-3.5 pb-20 transition-all duration-300 ${
-          isGuest ? 'filter blur-[10px] pointer-events-none select-none opacity-25' : ''
+          isGuest ? 'pointer-events-none select-none' : ''
         }`}
+        style={
+          isGuest
+            ? {
+                filter: 'blur(8px)',
+                WebkitFilter: 'blur(8px)',
+                opacity: 0.45,
+                pointerEvents: 'none',
+                userSelect: 'none',
+              }
+            : undefined
+        }
       >
         <input
           type="file"

@@ -15,6 +15,7 @@ import {
   onSnapshot,
   query,
   orderBy,
+  where,
 } from 'firebase/firestore';
 import { db, uploadImageToCloud, deleteCloudImage } from '../services/firebase';
 import { UserRole } from '../types';
@@ -734,7 +735,10 @@ export function subscribeToPrivateMessages(
   participantId: number | null,
   onMessagesChange: (messages: PrivateMessage[]) => void
 ): () => void {
-  const q = query(collection(db, PRIVATE_MESSAGES_COLLECTION), orderBy('timestamp', 'asc'));
+  const q =
+    participantId !== null
+      ? query(collection(db, PRIVATE_MESSAGES_COLLECTION), where('participantId', '==', participantId))
+      : query(collection(db, PRIVATE_MESSAGES_COLLECTION), orderBy('timestamp', 'asc'));
 
   return onSnapshot(
     q,

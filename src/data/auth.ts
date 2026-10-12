@@ -74,7 +74,7 @@ export function normalizeRole(id: number, username: string, rawRole?: string): U
   if (id === 1 || username.trim().toLowerCase() === 'sami') {
     return 'owner';
   }
-  if (rawRole === 'guest') return 'guest';
+  if (rawRole === 'guest' || id > 9000000 || username.startsWith('guest_')) return 'guest';
   if (rawRole === 'moderator') return 'moderator';
   return 'user';
 }
@@ -321,8 +321,11 @@ export function getSavedUserSession(): CurrentUser | null {
     const raw = localStorage.getItem(SESSION_STORAGE_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw) as CurrentUser;
-    if (parsed && (parsed.username || parsed.isGuest)) {
-      parsed.role = normalizeRole(parsed.id, parsed.username, parsed.role);
+    if (parsed && (parsed.username || parsed.isGuest || (parsed.id && parsed.id > 9000000))) {
+      parsed.role = normalizeRole(parsed.id, parsed.username || '', parsed.role);
+      if (parsed.role === 'guest' || parsed.id > 9000000 || (parsed.username && parsed.username.startsWith('guest_'))) {
+        parsed.isGuest = true;
+      }
       return parsed;
     }
   } catch {

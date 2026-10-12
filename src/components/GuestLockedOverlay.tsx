@@ -19,7 +19,8 @@ export const GuestLockedOverlay: React.FC<GuestLockedOverlayProps> = ({
   return (
     <div
       dir="rtl"
-      className="absolute inset-0 z-30 flex items-center justify-center p-4 bg-[#050811]/80 backdrop-blur-lg select-none pointer-events-auto min-h-full w-full"
+      className="absolute inset-0 z-40 flex items-center justify-center p-4 bg-[#050811]/80 backdrop-blur-md select-none pointer-events-auto min-h-full w-full"
+      style={{ backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}
       onClick={(e) => e.stopPropagation()}
     >
       <div className="w-full max-w-sm sm:max-w-md p-6 sm:p-8 rounded-3xl bg-gradient-to-b from-[#0f172a]/95 via-[#0c1322]/98 to-[#070b14]/98 border-2 border-amber-500/50 shadow-[0_20px_60px_rgba(0,0,0,0.95),0_0_35px_rgba(245,158,11,0.25)] text-center space-y-4 animate-in fade-in zoom-in-95 duration-200">

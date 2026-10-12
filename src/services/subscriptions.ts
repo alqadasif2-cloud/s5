@@ -436,7 +436,7 @@ let memoryCachedPlans: SubscriptionPlan[] | null = null;
 const plansSubscribers = new Set<(plans: SubscriptionPlan[]) => void>();
 let globalPlansUnsub: (() => void) | null = null;
 
-function getInitialPlansFromCache(): SubscriptionPlan[] {
+export function getInitialPlansFromCache(): SubscriptionPlan[] {
   if (memoryCachedPlans) return memoryCachedPlans;
   try {
     const raw = localStorage.getItem(LOCAL_PLANS_CACHE_KEY);

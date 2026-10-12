@@ -52,7 +52,7 @@ import { CloudImage } from './CloudImage';
 import { ImageViewerModal } from './ImageViewerModal';
 import { MessageBubble } from './MessageBubble';
 import { SubscriptionPlan } from '../types/subscription';
-import { subscribeToSubscriptionPlans } from '../services/subscriptions';
+import { subscribeToSubscriptionPlans, getInitialPlansFromCache } from '../services/subscriptions';
 import { SubscriptionDetailModal } from './SubscriptionDetailModal';
 
 interface GroupChatScreenProps {
@@ -92,9 +92,15 @@ export const GroupChatScreen: React.FC<GroupChatScreenProps> = ({
   const [isPrivateChatOpen, setIsPrivateChatOpen] = useState(
     initialMode === 'private_chat' || Boolean(targetPartnerId)
   );
-  const [ownerSelectedPmUserId, setOwnerSelectedPmUserId] = useState<number | null>(
-    targetPartnerId || null
-  );
+  const [ownerSelectedPmUserId, setOwnerSelectedPmUserId] = useState<number | null>(() => {
+    if (targetPartnerId) return targetPartnerId;
+    if (currentUser.isGuest) {
+      const savedMod = localStorage.getItem(`sami_guest_active_mod_${currentUser.id}`);
+      if (savedMod) return Number(savedMod) || 1;
+      return 1;
+    }
+    return null;
+  });
 
   // Password Prompt Modal for first-time channel entry
   const [pendingPasswordChannel, setPendingPasswordChannel] = useState<CommunityChannel | null>(null);
@@ -114,7 +120,9 @@ export const GroupChatScreen: React.FC<GroupChatScreenProps> = ({
   // Messages state
   const [channelMessages, setChannelMessages] = useState<ChatMessage[]>([]);
   const [privateMessages, setPrivateMessages] = useState<PrivateMessage[]>([]);
-  const [subscriptionPlans, setSubscriptionPlans] = useState<SubscriptionPlan[]>([]);
+  const [subscriptionPlans, setSubscriptionPlans] = useState<SubscriptionPlan[]>(() =>
+    getInitialPlansFromCache()
+  );
   const [viewingSubscriptionPlan, setViewingSubscriptionPlan] = useState<SubscriptionPlan | null>(null);
   const [inputText, setInputText] = useState('');
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -258,12 +266,15 @@ export const GroupChatScreen: React.FC<GroupChatScreenProps> = ({
       setIsPrivateChatOpen(true);
       setSelectedChannel(null);
       setOwnerSelectedPmUserId(targetPartnerId);
+      if (currentUser.isGuest) {
+        localStorage.setItem(`sami_guest_active_mod_${currentUser.id}`, String(targetPartnerId));
+      }
       if (targetInitialText) {
         setInputText(targetInitialText);
       }
       onTargetConsumed?.();
     }
-  }, [targetPartnerId, targetInitialText, onTargetConsumed]);
+  }, [targetPartnerId, targetInitialText, onTargetConsumed, currentUser.id, currentUser.isGuest]);
 
   // Handle Deep Link to Specific Message (Smooth scroll & 2-second highlight)
   useEffect(() => {
@@ -841,6 +852,14 @@ export const GroupChatScreen: React.FC<GroupChatScreenProps> = ({
 
                     <button
                       type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (currentUser.isGuest) {
+                          onRequestPackageSupport?.(sub);
+                        } else {
+                          setViewingSubscriptionPlan(sub);
+                        }
+                      }}
                       className="px-2.5 py-1 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 text-[10.5px] font-bold shrink-0 flex items-center gap-1 group-hover:scale-105 transition"
                     >
                       <span>{currentUser.isGuest ? 'المزيد من المعلومات 💬' : 'التفاصيل'}</span>

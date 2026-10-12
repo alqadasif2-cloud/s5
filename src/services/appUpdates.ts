@@ -12,17 +12,17 @@ export interface AppUpdateConfig {
   updatedAt?: number;
 }
 
-export const CURRENT_APP_VERSION_NAME = '1.2.0';
-export const CURRENT_APP_VERSION_CODE = 10;
+export const CURRENT_APP_VERSION_NAME = '1.3.0';
+export const CURRENT_APP_VERSION_CODE = 11;
 
 export const DEFAULT_UPDATE_CONFIG: AppUpdateConfig = {
   id: 'latest',
-  versionName: '1.2.0',
-  versionCode: 10,
+  versionName: '1.3.0',
+  versionCode: 11,
   downloadUrl: 'https://github.com/alsonadi44/SamiTradingTracker/releases',
-  description: 'الإصدار الأحدث متوفر الآن مع تحسينات في الأداء وتطوير الواجهة.',
+  description: 'الإصدار 1.3.0 متوفر الآن مع تحسينات في حماية الضيوف وسرعة الباقات وإدارة المشرفين.',
   isMandatory: false,
-  minSupportedVersionCode: 10,
+  minSupportedVersionCode: 11,
   updatedAt: Date.now(),
 };
 

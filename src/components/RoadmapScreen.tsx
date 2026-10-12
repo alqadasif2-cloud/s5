@@ -24,7 +24,14 @@ export const RoadmapScreen: React.FC<RoadmapScreenProps> = ({
   onGoToLogin,
   onBrowsePackages,
 }) => {
-  const isGuest = Boolean(currentUser?.isGuest || currentUser?.role === 'guest');
+  const isGuest = Boolean(
+    currentUser?.isGuest || currentUser?.role === 'guest' || (currentUser?.id && currentUser.id > 9000000)
+  );
+
+  const safeSelectMilestone = (milestone: Milestone) => {
+    if (isGuest) return;
+    onSelectMilestone(milestone);
+  };
 
   const completedCount = trades
     ? trades.filter((t) => t.type === 'WIN').length
@@ -45,8 +52,19 @@ export const RoadmapScreen: React.FC<RoadmapScreenProps> = ({
     >
       <div
         className={`space-y-4 pb-20 animate-in fade-in duration-200 transition-all ${
-          isGuest ? 'filter blur-[10px] pointer-events-none select-none opacity-25' : ''
+          isGuest ? 'pointer-events-none select-none' : ''
         }`}
+        style={
+          isGuest
+            ? {
+                filter: 'blur(8px)',
+                WebkitFilter: 'blur(8px)',
+                opacity: 0.45,
+                pointerEvents: 'none',
+                userSelect: 'none',
+              }
+            : undefined
+        }
       >
         {/* Top Header */}
         <div className="pt-1">

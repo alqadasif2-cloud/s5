@@ -60,6 +60,7 @@ service cloud.firestore {
         && isValidUserId(request.resource.data.participantId)
         && isValidUserId(request.resource.data.senderId)
         && isValidUserId(request.resource.data.receiverId)
+        && (request.resource.data.participantId == request.resource.data.senderId || request.resource.data.participantId == request.resource.data.receiverId)
         && request.resource.data.timestamp is int;
       allow update: if request.resource.data.keys().hasAll(['id', 'participantId', 'senderId', 'receiverId', 'timestamp'])
         && request.resource.data.id == resource.data.id

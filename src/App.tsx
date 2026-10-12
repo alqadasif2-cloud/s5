@@ -197,7 +197,7 @@ export default function App() {
   useEffect(() => {
     if (!currentUser) return;
     const unsubUsers = subscribeToCommunityUsers((allUsers) => {
-      if (currentUser.isGuest) return;
+      if (currentUser.isGuest || currentUser.role === 'guest' || currentUser.id > 9000000) return;
       const matched = allUsers.find((u) => u.id === currentUser.id);
       if (!matched && currentUser.id !== 1) {
         // Account was deleted by Owner Sami
